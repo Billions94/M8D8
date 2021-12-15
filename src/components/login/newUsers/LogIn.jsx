@@ -1,11 +1,15 @@
 import React from "react";
 import { useFormik } from "formik";
 import { Form, Button, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import API from "./axios";
 import * as yup from "yup";
 import "./styles.css";
 
 
 const LogIn = () => {
+
+  const navigate = useNavigate()
 
   const schema = yup.object({
     email: yup.string().email().required("Please Enter your Email"),
@@ -35,14 +39,17 @@ const LogIn = () => {
       })
       if(response.ok) {
         const  data  = await response.json()
-        const token = data.token
-        console.log('==================> token', token)
-        localStorage.setItem('TOKEN',  token )
+        const { accessToken, refreshToken } = data
+        
+        localStorage.setItem('TOKEN',  accessToken)
+        localStorage.setItem('REFRESH_TOKEN',  refreshToken)
 
         setFieldValue({
           email: "",
           password: "",
         })
+
+        navigate('/home')
       }
     } catch (error) {
       console.log(error)
@@ -51,27 +58,6 @@ const LogIn = () => {
   schema: schema
   })
 
-
-  
-
-
-  // const handleSubmit = (e) => {
-  //     e.preventDefault();
-
-  //   const login = async () => {
-  //     try {
-  //       const response = await fetch(`http://localhost:3001/authors/login`, {
-  //         method: 'POST'
-  //       })
-  //       if(response.ok) {
-  //         const token = await response.json()
-  //         console.log('==================> token', token)
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  // }
 
   return (
     <div className="mt-5  mx-auto signUpContainer">

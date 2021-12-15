@@ -1,79 +1,109 @@
 import React from "react"
-import { Formik } from "formik";
-import * as yup from "yup";
+import { useFormik } from "formik"
+import * as yup from "yup"
 import { Link } from "react-router-dom"
 import { Form, Col, Button } from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
 
 
-const schema = yup.object({
-  username: yup.string().required("Please Enter a username"),
-  email: yup.string().email().required("Please Enter your Email"),
-  confirmEmail: yup
-    .string()
-    .email()
-    .required()
-    .oneOf([yup.ref("email"), null], "Emails must match"),
-  password: yup
-    .string()
-    .required("Please Enter your password")
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-      "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
-    ),
-  confirmPassword: yup
-    .string()
-    .required()
-    .oneOf([yup.ref("password"), null], "Passwords must match"),
-});
+
 
 const Register = (props) => {
+
+  const navigate = useNavigate()
+
+  const schema = yup.object({
+    firstName: yup.string().required("Name is required"),
+    lastName: yup.string().required("Name is required"),
+    email: yup.string().email().required("Email is required"),
+    password: yup
+      .string()
+      .required("Password is required")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+      ),
+  });
+  
+  const { values, handleChange, handleSubmit, errors, setFieldValue } =
+  useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    },
+    onSubmit: async (values) => {
+      try {
+        const response = await fetch(`http://localhost:3001/authors/register`, {
+          method: 'POST',
+          body: JSON.stringify(values),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        if(response.ok) {
+          const  data  = await response.json()
+          const token = data.token
+          console.log('==================> token', token)
+          localStorage.setItem('TOKEN',  token )
+  
+          setFieldValue({
+            email: "",
+            password: "",
+          })
+  
+          navigate('/login')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    schema: schema
+    })
 
 
   return (
     <div className="col3">
     <Col sm={6} md={4} className='mt-5 mx-auto'>
-       <Formik
-          validationSchema={schema}
-          onSubmit={console.log}
-          initialValues={{
-            username: "",
-            email: "",
-            confirmEmail: "",
-            password: "",
-            confirmPassword: "",
-          }}
-        >
-          {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            values,
-            touched,
-            isValid,
-            errors,
-          }) => (
             <div className="register">
               <h4 className="SignInHeading register1">SIGN UP</h4>
               <Form noValidate className='register' onSubmit={handleSubmit}>
-                <Form.Group controlId="formBasicUserName">
+                <Form.Group className='mt-3' controlId="formBasicUserName">
                   <Form.Control
                     size="lg"
                     className="SignUpFormControls register"
                     type="text"
-                    name="username"
-                    value={values.username}
+                    name="firstName"
+                    value={values.firstName}
                     onChange={handleChange}
-                    placeholder="Username"
-                    isInvalid={!!errors.username}
+                    placeholder="Enter first name"
+                    isInvalid={!!errors.firstName}
                   />
                   <Form.Control.Feedback className="FeedBack" type="invalid">
                     {errors.username}
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group controlId="formBasicEmail">
+                <Form.Group className='mt-3' controlId="formBasicUserName">
                   <Form.Control
-                    type="email"
+                    size="lg"
+                    className="SignUpFormControls register"
+                    type="text"
+                    name="lastName"
+                    value={values.lastName}
+                    onChange={handleChange}
+                    placeholder="Enter last name"
+                    isInvalid={!!errors.lastName}
+                  />
+                  <Form.Control.Feedback className="FeedBack" type="invalid">
+                    {errors.username}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group className='mt-3' controlId="formBasicEmail">
+                  <Form.Control
+                    type="Enter email"
                     placeholder="Email"
                     value={values.email}
                     onChange={handleChange}
@@ -87,23 +117,8 @@ const Register = (props) => {
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group controlId="formBasicConfirmEmail">
-                  <Form.Control
-                    type="email"
-                    className="SignUpFormControls register"
-                    size="lg"
-                    name="confirmEmail"
-                    value={values.confirmEmail}
-                    onChange={handleChange}
-                    placeholder="Confirm Email"
-                    isInvalid={!!errors.confirmEmail}
-                  />
-                  <Form.Control.Feedback className="FeedBack" type="invalid">
-                    {errors.confirmEmail}
-                  </Form.Control.Feedback>
-                </Form.Group>
 
-                <Form.Group controlId="formBasicPassword">
+                <Form.Group className='mt-3' controlId="formBasicPassword">
                   <Form.Control
                     className="SignUpFormControls register"
                     size="lg"
@@ -119,25 +134,9 @@ const Register = (props) => {
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group controlId="formBasicConfirmPassword">
-                  <Form.Control
-                    className="SignUpFormControls register"
-                    size="lg"
-                    name="confirmPassword"
-                    onChange={handleChange}
-                    type="password"
-                    value={values.confirmPassword}
-                    placeholder="Confirm Password"
-                    isInvalid={!!errors.confirmPassword}
-                  />
-                  <Form.Control.Feedback className="FeedBack" type="invalid">
-                    {errors.confirmPassword}
-                  </Form.Control.Feedback>
-                </Form.Group>
-
                 <Button
                   variant="primary"
-                  className="SignUpButton register text-dark customBtn"
+                  className="SignUpButton register text-dark customBtn mt-3"
                   type="submit"
                 >
                   Sign Up
@@ -152,8 +151,6 @@ const Register = (props) => {
                 </Form.Text>
               </Form>
             </div>
-          )}
-        </Formik>
     </Col>
     </div>
   );
