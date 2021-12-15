@@ -1,27 +1,29 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Image } from "react-bootstrap";
-import { withRouter } from "react-router";
+import { useParams, useNavigate } from "react-router-dom";
 import BlogAuthor from "../../components/blog/blog-author";
 import BlogLike from "../../components/likes/BlogLike";
 import posts from "../../data/posts.json";
 import "./styles.css";
-class Blog extends Component {
-  state = {
-    blog: {},
-    loading: true,
-  };
-  componentDidMount() {
-    const { id } = this.props.match.params;
+
+const Blog = () => {
+  const [blog, setBlog] = useState({})
+  const [loading, setLoading] = useState(true)
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const { id } = useParams()
     console.log(posts);
     const blog = posts.find((post) => post._id.toString() === id);
     if (blog) {
       this.setState({ blog, loading: false });
     } else {
-      this.props.history.push("/404");
+      navigate("/404");
     }
-  }
+  }, [])
 
-  render() {
+ {
     const { loading, blog } = this.state;
     if (loading) {
       return <div>loading</div>;
@@ -53,4 +55,4 @@ class Blog extends Component {
   }
 }
 
-export default withRouter(Blog);
+export default (Blog);

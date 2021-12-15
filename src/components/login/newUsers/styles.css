@@ -1,0 +1,49 @@
+.blog-main-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.register {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.register1 {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+
+
+.signUpContainer {
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Geb.svg/1200px-Geb.svg.png) !important;
+  background-size: contain ;
+  height: 72vh;
+}
+
+
+
+.col3 {
+  background-image: url(https://pressbooks.ulib.csuohio.edu/bright-continent/wp-content/uploads/sites/21/2018/04/Four-heads-in-scale2-1024x717.jpg);
+  background-size: contain ;
+  height: 72vh;
+}
+
+.customForm {
+  height: 75vh;
+}
+
+.customBtn {
+  border-radius: 20px;
+  background-color: transparent;
+  border: 1px solid black;
+}
+
+.customBtn:hover {
+  background-color: blanchedalmond;
+  border: 1px solid black;
+}
