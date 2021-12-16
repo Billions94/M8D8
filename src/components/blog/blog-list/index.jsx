@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import { Row, Col } from "react-bootstrap";
 import BlogItem from "../blog-item";
 import posts from "../../../data/posts.json";
-export default class BlogList extends Component {
-  render() {
+const BlogList = () => {
     return (
       <Row>
         {posts.map((post) => (
@@ -13,5 +12,6 @@ export default class BlogList extends Component {
         ))}
       </Row>
     );
-  }
 }
+
+export default BlogList

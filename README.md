@@ -1,1 +1,1 @@
-# Strive Blog Template
+# Strive Blog Template M8D9

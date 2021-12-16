@@ -1,12 +1,13 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Navbar, Button } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import "./styles.css";
 
 const NavBar = () => {
 
   const location = useLocation()
+
 
   return (
     <>
@@ -85,6 +86,13 @@ const NavBar = () => {
               size="lg">
               Login
             </Button>
+            <a href="http://localhost:3001/authors/googleLogin">
+            <Button
+              className="blog-navbar-add-button" 
+              size="lg">
+              google Login
+            </Button>
+            </a>
             </div>
         </Container>
       </Navbar>
